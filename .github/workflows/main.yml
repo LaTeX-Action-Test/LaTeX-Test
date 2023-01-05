@@ -20,15 +20,6 @@ jobs:
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.repository }}#*/
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      run: |
-          echo $PR
-          echo $NUMBER
-          echo $EVENT_NUMBER
-          echo $ISSUE
-          echo $URL
-          echo $OWNER
-          echo $REPO
-          echo $RUN_URL
     - name: Install TeXlive
       run: sudo apt-get install texlive texlive-publishers texlive-science latexmk
     - name: LaTeX Compile
@@ -49,7 +40,7 @@ jobs:
       run: |
           curl \
             -X POST \
-            https://api.github.com/repos/$OWNER/$REPO/issues/$PR/comments \
+            https://api.github.com/repos/${{ env.OWNER }}/${{ env.REPO }}/issues/${{ env.PR }}/comments \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.raw" \
             -H "Content-Type: $(file -b --mime-type PSet-${{ env.SHORT_SHA }}.pdf)" \
@@ -68,7 +59,7 @@ jobs:
       run: |
           curl \
             -X POST \
-            https://api.github.com/repos/$OWNER/$REPO/issues/$PR/comments \
+            https://api.github.com/repos/${{{ env.OWNER }}/${{ env.REPO }}/issues/${{ env.PR }}/comments \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.text+json" \
             -d '{"body": "Download artifacts from $RUN_URL"}' \
