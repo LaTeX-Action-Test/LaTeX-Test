@@ -12,19 +12,15 @@ jobs:
       # https://docs.github.com/en/developers/webhooks-and-events/events/github-event-types#pullrequestevent
       env:
           PR: ${{ github.event.pull_request.number }}
-          NUMBER: ${{ github.event.issue.number }}
           EVENT_NUMBER: ${{ github.event.number }}
-          ISSUE: ${{ github.event.issue.html_url }}
           URL: ${{ github.api_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ github.repository_owner }}
-          REPO: ${{ github.repository }}#*/
+          REPO: ${{ github.repository }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       run: |
         echo ${{ env.PR }}
-        echo ${{ env.NUMBER }}
         echo ${{ env.EVENT_NUMBER }}
-        echo ${{ env.ISSUE }}
         echo ${{ env.URL }}
         echo ${{ env.OWNER }}
         echo ${{ env.REPO }}
@@ -46,10 +42,18 @@ jobs:
     # https://www.cazzulino.com/github-actions-repository.html
     # 
     - name: Add comment to PR with pdf
+      env:
+          PR: ${{ github.event.pull_request.number }}
+          EVENT_NUMBER: ${{ github.event.number }}
+          URL: ${{ github.api_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       run: |
           curl \
             -X POST \
-            https://api.github.com/repos/${{ env.OWNER }}/${{ env.REPO }}/issues/${{ env.PR }}/comments \
+            https://api.github.com/repos/${{ env.REPO }}/issues/${{ env.PR }}/comments \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.raw" \
             -H "Content-Type: $(file -b --mime-type PSet-${{ env.SHORT_SHA }}.pdf)" \
@@ -65,10 +69,18 @@ jobs:
           path: PSet-${{ env.SHORT_SHA }}.pdf
       # https://docs.github.com/en/rest/issues/comments?apiVersion=2022-11-28#create-an-issue-comment    
     - name: Add comment to PR with workflow output
+      env:
+          PR: ${{ github.event.pull_request.number }}
+          EVENT_NUMBER: ${{ github.event.number }}
+          URL: ${{ github.api_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       run: |
           curl \
             -X POST \
-            https://api.github.com/repos/${{ env.OWNER }}/${{ env.REPO }}/issues/${{ env.PR }}/comments \
+            https://api.github.com/repos/$REPO/issues/$PR/comments \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.text+json" \
             -d '{"body": "Download artifacts from $RUN_URL"}' \
