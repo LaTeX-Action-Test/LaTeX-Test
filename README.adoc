@@ -1,4 +1,4 @@
 LaTeX-Test
 ==========
 
-Use GitHub Actions to build a pdf and post a link in the issue.
+Use GitHub Actions to build a pdf and post a link in the pull request.
