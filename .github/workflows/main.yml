@@ -6,13 +6,51 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Install TeXlive
       run: sudo apt-get install texlive texlive-publishers texlive-science latexmk
     - name: LaTeX Compile
       run: latexmk -pdf PSet.tex
-    - name: Save artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ARTIFACT_NAME
-        path: PSet.pdf
+    # https://stackoverflow.com/questions/59810838/how-to-get-the-short-sha-for-the-github-workflow    
+    - name: Add SHORT_SHA env property with commit short sha
+        run: |
+           echo "SHORT_SHA=`echo ${{ github.sha }} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Rename the output
+        run: |
+          cp PSet.pdf PSet-${{ env.SHORT_SHA }}.pdf
+   # https://stackoverflow.com/questions/58066966/commenting-a-pull-request-in-a-github-action   
+    # https://stackoverflow.com/questions/37786539/how-to-upload-github-asset-file-using-curl
+    - name: Add comment to PR with pdf
+        env:
+          URL: ${{ github.event.issue.comments_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl \
+            -X POST \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Content-Type: $(file -b --mime-type PSet-${{ env.SHORT_SHA }}.pdf)" \
+            --data-binary @PSet-${{ env.SHORT_SHA }}.pdf \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            $URL
+      # Adding a link to the uploaded artifact may be cleaner as one can set retention time
+      # however these links do not seem to have a pattern in how they are generated, so
+      # use webpage for the run
+      # The artifact is also stored as a Zip file
+      - uses: actions/upload-artifact@v3            # Upload the artifact
+        with:
+          name: artifact-${{ env.SHORT_SHA }}
+          path: PSet-${{ env.SHORT_SHA }}.pdf
+      # https://docs.github.com/en/rest/issues/comments?apiVersion=2022-11-28#create-an-issue-comment    
+      - name: Add comment to PR with workflow output
+        env:
+          URL: ${{ github.event.issue.comments_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          curl \
+            -X POST \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -d '{"body": "Download artifacts from $RUN_URL"}' \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            $URL
