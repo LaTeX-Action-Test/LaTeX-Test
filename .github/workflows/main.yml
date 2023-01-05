@@ -1,0 +1,18 @@
+# https://gist.github.com/farr/26d109d947a7ee4a35e37f7d77d91615
+name: latex-build
+on: [pull]
+jobs:
+  build-latex:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install TeXlive
+      run: sudo apt-get install texlive texlive-publishers texlive-science latexmk
+    - name: LaTeX Compile
+      run: latexmk -pdf PSet.tex
+    - name: Save artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ARTIFACT_NAME
+        path: PSet.pdf
