@@ -56,7 +56,7 @@ jobs:
             https://api.github.com/repos/${{ env.REPO }}/issues/${{ env.PR }}/comments \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.raw+json" \
-            -d "{\"body\": \"Download PDF\" }" \
+            -d '{"body": "Download PDF" }' \
             --data-binary @PSet-${{ env.SHORT_SHA }}.pdf \
             -H "X-GitHub-Api-Version: 2022-11-28"
       # Adding a link to the uploaded artifact may be cleaner as one can set retention time
@@ -77,12 +77,13 @@ jobs:
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.repository }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          MESSAGE: Download artifacts from $RUN_URL
+          MESSAGE: "{\"body\": Download artifacts from $RUN_URL}"
       run: |
+          echo $MESSAGE
           curl \
             -X POST \
             https://api.github.com/repos/$REPO/issues/$PR/comments \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.text+json" \
-            -d "{\"body\": $MESSAGE }" \
+            -d $MESSAGE \
             -H "X-GitHub-Api-Version: 2022-11-28"
