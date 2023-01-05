@@ -21,10 +21,10 @@ jobs:
    # https://stackoverflow.com/questions/58066966/commenting-a-pull-request-in-a-github-action   
     # https://stackoverflow.com/questions/37786539/how-to-upload-github-asset-file-using-curl
     - name: Add comment to PR with pdf
-        env:
+      env:
           URL: ${{ github.event.issue.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
+      run: |
           curl \
             -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
@@ -36,17 +36,17 @@ jobs:
       # however these links do not seem to have a pattern in how they are generated, so
       # use webpage for the run
       # The artifact is also stored as a Zip file
-      - uses: actions/upload-artifact@v3            # Upload the artifact
-        with:
+    - uses: actions/upload-artifact@v3            # Upload the artifact
+      with:
           name: artifact-${{ env.SHORT_SHA }}
           path: PSet-${{ env.SHORT_SHA }}.pdf
       # https://docs.github.com/en/rest/issues/comments?apiVersion=2022-11-28#create-an-issue-comment    
-      - name: Add comment to PR with workflow output
-        env:
+    - name: Add comment to PR with workflow output
+      env:
           URL: ${{ github.event.issue.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
+      run: |
           curl \
             -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
