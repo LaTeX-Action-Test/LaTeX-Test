@@ -13,10 +13,10 @@ jobs:
       run: latexmk -pdf PSet.tex
     # https://stackoverflow.com/questions/59810838/how-to-get-the-short-sha-for-the-github-workflow    
     - name: Add SHORT_SHA env property with commit short sha
-        run: |
+      run: |
            echo "SHORT_SHA=`echo ${{ github.sha }} | cut -c1-8`" >> $GITHUB_ENV
-      - name: Rename the output
-        run: |
+    - name: Rename the output
+      run: |
           cp PSet.pdf PSet-${{ env.SHORT_SHA }}.pdf
    # https://stackoverflow.com/questions/58066966/commenting-a-pull-request-in-a-github-action   
     # https://stackoverflow.com/questions/37786539/how-to-upload-github-asset-file-using-curl
