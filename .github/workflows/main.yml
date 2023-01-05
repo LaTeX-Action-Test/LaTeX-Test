@@ -20,6 +20,15 @@ jobs:
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.repository }}#*/
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      run: |
+        echo ${{ env.PR }}
+        echo ${{ env.NUMBER }}
+        echo ${{ env.EVENT_NUMBER }}
+        echo ${{ env.ISSUE }}
+        echo ${{ env.URL }}
+        echo ${{ env.OWNER }}
+        echo ${{ env.REPO }}
+        echo ${{ env.RUN_URL }}
     - name: Install TeXlive
       run: sudo apt-get install texlive texlive-publishers texlive-science latexmk
     - name: LaTeX Compile
