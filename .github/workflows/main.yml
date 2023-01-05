@@ -1,6 +1,6 @@
 # https://gist.github.com/farr/26d109d947a7ee4a35e37f7d77d91615
 name: latex-build
-on: [pull]
+on: [pull_request]
 jobs:
   build-latex:
     runs-on: ubuntu-latest
