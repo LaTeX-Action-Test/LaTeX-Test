@@ -68,7 +68,7 @@ jobs:
       run: |
           curl \
             -X POST \
-            https://api.github.com/repos/${{{ env.OWNER }}/${{ env.REPO }}/issues/${{ env.PR }}/comments \
+            https://api.github.com/repos/${{ env.OWNER }}/${{ env.REPO }}/issues/${{ env.PR }}/comments \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.text+json" \
             -d '{"body": "Download artifacts from $RUN_URL"}' \
