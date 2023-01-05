@@ -1,4 +1,4 @@
-LaTeX-Test
-==========
+LaTeX: Build and Post PDF
+=========================
 
 Use GitHub Actions to build a pdf and post a link in the pull request.
