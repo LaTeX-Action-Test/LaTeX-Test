@@ -25,13 +25,14 @@ jobs:
           URL: ${{ github.event.issue.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+          echo $URL
           curl \
+            $URL \
             -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Content-Type: $(file -b --mime-type PSet-${{ env.SHORT_SHA }}.pdf)" \
             --data-binary @PSet-${{ env.SHORT_SHA }}.pdf \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            $URL
+            -H "X-GitHub-Api-Version: 2022-11-28"
       # Adding a link to the uploaded artifact may be cleaner as one can set retention time
       # however these links do not seem to have a pattern in how they are generated, so
       # use webpage for the run
@@ -47,10 +48,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       run: |
+          echo $URL
           curl \
+            $URL \
             -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -d '{"body": "Download artifacts from $RUN_URL"}' \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            $URL
+            -H "X-GitHub-Api-Version: 2022-11-28"
