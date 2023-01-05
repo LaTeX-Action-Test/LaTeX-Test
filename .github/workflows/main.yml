@@ -20,16 +20,26 @@ jobs:
           cp PSet.pdf PSet-${{ env.SHORT_SHA }}.pdf
    # https://stackoverflow.com/questions/58066966/commenting-a-pull-request-in-a-github-action   
     # https://stackoverflow.com/questions/37786539/how-to-upload-github-asset-file-using-curl
+    # https://docs.github.com/en/github-ae@latest/actions/learn-github-actions/environment-variables#default-environment-variables
+    # https://www.cazzulino.com/github-actions-repository.html
+    # 
     - name: Add comment to PR with pdf
       env:
-          URL: ${{ github.event.issue.comments_url }}
+          NUMBER: ${{ github.event.issue.number }}
+          ISSUE: ${{ github.event.issue.html_url }}
+          URL: ${GITHUB_API_URL}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${GITHUB_REPOSITORY_OWNER}
+          REPO: ${GITHUB_REPOSITORY#*/}
       run: |
-          echo $URL
+          echo $OWNER
+          echo $REPO
+          echo $ISSUE
           curl \
-            $URL \
             -X POST \
+            https://api.github.com/repos/$OWNER/$REPO/issues/$ISSUE/comments \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.raw" \
             -H "Content-Type: $(file -b --mime-type PSet-${{ env.SHORT_SHA }}.pdf)" \
             --data-binary @PSet-${{ env.SHORT_SHA }}.pdf \
             -H "X-GitHub-Api-Version: 2022-11-28"
@@ -44,14 +54,17 @@ jobs:
       # https://docs.github.com/en/rest/issues/comments?apiVersion=2022-11-28#create-an-issue-comment    
     - name: Add comment to PR with workflow output
       env:
-          URL: ${{ github.event.issue.comments_url }}
+          NUMBER: ${{ github.event.issue.number }}
+          ISSUE: ${{ github.event.issue.html_url }}
+          URL: ${GITHUB_API_URL}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${GITHUB_REPOSITORY_OWNER}
+          REPO: ${GITHUB_REPOSITORY#*/}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       run: |
-          echo $URL
           curl \
-            $URL \
             -X POST \
+            https://api.github.com/repos/$OWNER/$REPO/issues/$ISSUE/comments \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -d '{"body": "Download artifacts from $RUN_URL"}' \
