@@ -16,7 +16,7 @@ jobs:
           URL: ${{ github.api_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ github.repository_owner }}
-          REPO: ${{ github.repository#*/ }}
+          REPO: ${{ github.repository }}#*/
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     - name: Print env
       run: |
@@ -47,7 +47,7 @@ jobs:
       run: |
           curl \
             -X POST \
-            https://api.github.com/repos/$OWNER/$REPO/issues/$PRcomments \
+            https://api.github.com/repos/$OWNER/$REPO/issues/$PR/comments \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.raw" \
             -H "Content-Type: $(file -b --mime-type PSet-${{ env.SHORT_SHA }}.pdf)" \
