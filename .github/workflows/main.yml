@@ -7,21 +7,23 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+    - name: Get and print env
       # https://stackoverflow.com/questions/59077079/how-to-get-pull-request-number-within-github-actions-workflow
       # https://docs.github.com/en/developers/webhooks-and-events/events/github-event-types#pullrequestevent
       env:
           PR: ${{ github.event.pull_request.number }}
           NUMBER: ${{ github.event.issue.number }}
+          EVENT_NUMBER: ${{ github.event.number }}
           ISSUE: ${{ github.event.issue.html_url }}
           URL: ${{ github.api_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.repository }}#*/
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-    - name: Print env
       run: |
           echo $PR
           echo $NUMBER
+          echo $EVENT_NUMBER
           echo $ISSUE
           echo $URL
           echo $OWNER
