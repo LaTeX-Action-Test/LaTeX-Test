@@ -40,9 +40,9 @@ jobs:
           cp PSet-${{ env.SHORT_SHA }}.pdf output/
     - name: Pushes to LaTeX-PDFs
       uses: cpina/github-action-push-to-another-repository@main
-        env:
+      env:
           SSH_DEPLOY_KEY: ${{ secrets.DEPLOY }}
-        with:
+      with:
           source-directory: 'output'
           destination-github-username: 'LaTeX-Action-Test'
           destination-repository-name: 'LaTeX-PDFs'
@@ -57,7 +57,8 @@ jobs:
       # however these links do not seem to have a pattern in how they are generated, so
       # use webpage for the run
       # The artifact is also stored as a Zip file
-    - uses: actions/upload-artifact@v3            # Upload the artifact
+    - name: Upload artifact  
+      uses: actions/upload-artifact@v3            # Upload the artifact
       with:
           name: artifact-${{ env.SHORT_SHA }}
           path: PSet-${{ env.SHORT_SHA }}.pdf
