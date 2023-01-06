@@ -72,7 +72,7 @@ jobs:
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.repository }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          MESSAGE: Download [pdf](${{ github.server_url }}/${{ github.repository_owner }}/LaTeX-PDFs/${{ env.SHORT_SHA }}/PSet-${{ env.SHORT_SHA }}.pdf) or [artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          MESSAGE: Download [pdf](${{ github.server_url }}/${{ github.repository_owner }}/LaTeX-PDFs/raw/main/${{ env.SHORT_SHA }}/PSet-${{ env.SHORT_SHA }}.pdf) or [artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
       run: |
           echo $MESSAGE
           curl \
